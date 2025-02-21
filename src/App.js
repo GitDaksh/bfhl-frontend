@@ -11,7 +11,7 @@ export default function App() {
   const handleSubmit = async () => {
     try {
       const jsonInput = JSON.parse(input);
-      const res = await axios.post("https://vercel.com/dakshs-projects-f5b5518a/bfhl-backend/7Qx91GrDeTpLabytm6bUCQ27iVio/api/bfhl", jsonInput);
+      const res = await axios.post("https://bfhl-backend-ten-delta.vercel.app/api/bfhl", jsonInput);
       setResponse(res.data);
       setError("");
     } catch (err) {
