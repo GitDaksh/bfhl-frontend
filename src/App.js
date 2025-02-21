@@ -1,25 +1,51 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import axios from "axios";
+import "./App.css";
 
-function App() {
+export default function App() {
+  const [input, setInput] = useState("");
+  const [response, setResponse] = useState(null);
+  const [error, setError] = useState("");
+  const [filter, setFilter] = useState([]);
+
+  const handleSubmit = async () => {
+    try {
+      const jsonInput = JSON.parse(input);
+      const res = await axios.post("https://bfhl-backend-tawny.vercel.app/", jsonInput);
+      setResponse(res.data);
+      setError("");
+    } catch (err) {
+      setError("Invalid JSON or server error");
+    }
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container">
+      <div className="card">
+        <h1>BFHL Challenge</h1>
+        <textarea
+          className="input-box"
+          rows="4"
+          placeholder='{"data": ["A","1","B","2"]}'
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+        />
+        <button className="submit-btn" onClick={handleSubmit}>
+          Submit
+        </button>
+        {error && <p className="error-msg">{error}</p>}
+        {response && (
+          <div className="response-box">
+            <label>Filter Results:</label>
+            <select multiple className="dropdown" onChange={(e) => setFilter([...e.target.selectedOptions].map(o => o.value))}>
+              <option value="numbers">Numbers</option>
+              <option value="alphabets">Alphabets</option>
+              <option value="highest_alphabet">Highest Alphabet</option>
+            </select>
+            <pre className="response-data">{JSON.stringify(response, null, 2)}</pre>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
-
-export default App;
